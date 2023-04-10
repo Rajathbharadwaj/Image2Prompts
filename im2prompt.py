@@ -6,14 +6,16 @@ import torch
 @st.cache_data
 def blip2Prompt(url):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
+    # using processor for BLIP2 and loading the pretrained model (2.7B param)
     processor = Blip2Processor.from_pretrained("Salesforce/blip2-opt-2.7b")
     model = Blip2ForConditionalGeneration.from_pretrained(
         "Salesforce/blip2-opt-2.7b",
     )
     model.to(device)
+    # loading the image from the disk
     image = Image.open(url)
     inputs = processor(images=image, return_tensors="pt").to(device)
+    # generating prompts
     generated_ids = model.generate(**inputs)
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0].strip()
 
@@ -40,10 +42,13 @@ def blipBase(url):
 def sentenceSimilarity(text1, text2):
 
     from sentence_transformers import SentenceTransformer, util
-
+    # loading the pretrained ST model
     model = SentenceTransformer('all-mpnet-base-v2')
+    # getting the sentences
     sentences = [text1, text2]
+    # calculating embeddings of the sentences
     embeddings = model.encode(sentences, convert_to_tensor=True)
+    # calculating cosine similarity
     cos_sim = util.cos_sim(embeddings, embeddings)
 
     # Add all pairs to a list with their cosine similarity score
