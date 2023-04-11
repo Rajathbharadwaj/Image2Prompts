@@ -64,7 +64,6 @@ def sentenceSimilarity(text1, text2):
 
 def trOCR(url):
     from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-    import requests
     from PIL import Image
 
     processor = TrOCRProcessor.from_pretrained("microsoft/trocr-base-handwritten")
