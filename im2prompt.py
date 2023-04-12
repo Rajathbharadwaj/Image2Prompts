@@ -77,3 +77,14 @@ def trOCR(url):
 
     generated_text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
     return generated_text
+
+@st.cache_data
+def translate(prompt):
+    from transformers import T5Tokenizer, T5ForConditionalGeneration
+
+    tokenizer = T5Tokenizer.from_pretrained("t5-base", max_new_tokens=1000)
+    model = T5ForConditionalGeneration.from_pretrained("t5-base")
+
+    input_ids = tokenizer(f"translate English to French: {prompt}", return_tensors="pt").input_ids
+    outputs = model.generate(input_ids)
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)

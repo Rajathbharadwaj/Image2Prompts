@@ -1,5 +1,5 @@
 import streamlit as st
-from im2prompt import blip2Prompt, blipBase, sentenceSimilarity
+from im2prompt import blip2Prompt, blipBase, sentenceSimilarity, translate
 
 st.set_page_config(layout="wide", page_title="Image to Prompt Generator")
 
@@ -28,5 +28,8 @@ if generate:
             cosine_sim = sentenceSimilarity(prompt1, prompt2)
             if bool(cosine_sim>0.45):
                 st.write(f'The closest match prompt is {prompt2}')
+        with st.spinner('Translating to French'):
+            st.write(f' The translated text from the prompt is {translate(prompt2)}')
+
     else:
         st.write("Upload an image")
